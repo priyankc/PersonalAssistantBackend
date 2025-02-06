@@ -51,14 +51,21 @@ export async function createTasksFromEmails(
 ): Promise<number> {
   try {
     const tasks: UserTask[] = actionableEmails
-      .filter(email => email.analysis?.actionNeeded)
-      .map(email => ({
-        user_id: userId,
-        title: `${email.analysis!.actionType}: ${email.subject}`,
-        description: `From: ${email.from}\nDate: ${email.date}\n\nAction Required: ${email.analysis!.actionDescription}\n\nEmail Preview: ${email.snippet}`,
-        action_required: true,
-        email_id: email.id
-      }));
+      .filter(email => email.analysis?.actionNeeded && email.analysis?.actionType)
+      .map(email => {
+        const isReply = email.analysis!.actionType.toLowerCase() === 'reply';
+        return {
+          user_id: userId,
+          title: `${email.analysis!.actionType}: ${email.subject}`,
+          description: `From: ${email.from}\nDate: ${email.date}\n\nAction Required: ${email.analysis!.actionDescription}\n\nEmail Preview: ${email.snippet}`,
+          action_required: true,
+          email_id: email.id,
+          action_type: email.analysis!.actionType.toLowerCase(),
+          draft_reply: isReply ? email.analysis!.draftReply : null,
+          reply_status: isReply ? 'pending' : null,
+          thread_id: email.threadId
+        };
+      });
 
     if (tasks.length === 0) return 0;
 

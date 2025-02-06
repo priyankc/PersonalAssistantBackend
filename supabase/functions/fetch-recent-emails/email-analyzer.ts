@@ -8,7 +8,14 @@ export async function analyzeEmailWithGPT4(email: FormattedEmail): Promise<Email
       content: `You are an email assistant that analyzes emails and suggests actions. 
       Skip marketing, sales, and update emails. 
       For important emails, suggest specific actions like "reply", "schedule meeting", "follow up", etc.
-      Provide brief, specific action descriptions when needed.`
+      If action is 'reply', provide a draft reply that is professional and contextually appropriate.
+      Provide brief, specific action descriptions when needed.
+      
+      For reply actions, format your response as:
+      ACTION: reply
+      PRIORITY: [priority]
+      DRAFT_REPLY: [your suggested reply]
+      REASON: [reason for reply]`
     }, {
       role: "user",
       content: `Analyze this email:

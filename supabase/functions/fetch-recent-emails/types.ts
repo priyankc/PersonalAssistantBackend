@@ -9,6 +9,7 @@ export interface FormattedEmail {
   from: string;
   date: string;
   snippet: string;
+  threadId: string;
   analysis?: EmailAnalysis;
 }
 
@@ -27,4 +28,8 @@ export interface UserTask {
   action_required: boolean;
   email_id: string;
   created_at: string;
+  action_type?: string;
+  draft_reply?: string;
+  reply_status?: 'pending' | 'approved' | 'sent';
+  thread_id?: string;
 } 
